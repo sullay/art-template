@@ -1,9 +1,11 @@
 import { TEXT_ELEMENT } from '../constants'
 import { isEvent, getEventName } from '../util'
+import { Component } from './Component'
 
 // 普通元素
 export class vNode {
   constructor(type = '', allProps = {}, children = []) {
+    this.isComponent = (type.prototype instanceof Component);
     this.type = type;
     this.props = {};
     this.events = {};
