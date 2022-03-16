@@ -1,4 +1,3 @@
-import atr from 'atr';
 import "../index.css";
 import Test from "./test"
 

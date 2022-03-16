@@ -6,7 +6,7 @@ export default defineConfig({
   esbuild: {
     jsxFactory: 'atr.h',
     jsxFragment: 'atr.Fragment',
-    // jsxInject: `import atr from 'atr'`
+    jsxInject: `import atr from 'atr'`
   },
   resolve: {
     alias: {
