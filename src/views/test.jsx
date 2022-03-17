@@ -1,8 +1,8 @@
 import { renderDomTree } from '../../arthur/service'
 class Test extends atr.Component {
-  constructor(props, events, slots) {
-    super(props);
-    this.id = props.id;
+  constructor(node) {
+    super(node);
+    this.id = this.props.id;
     this.data = { num: 1 }
     this.addNum = this.addNum.bind(this);
   }
@@ -11,8 +11,8 @@ class Test extends atr.Component {
   }
   render() {
     return (
-      <div>
-        <h1>{this.id}</h1>
+      <div className="test">
+        {this.props.hasTitle ? (<h1>{this.props.id}</h1>) : (<h2>没有title</h2>)}
         <p style="color: red;">11111111111111111111</p>
         <p>计数{this.data.num}</p>
         <button onclick={this.addNum}>+1</button>

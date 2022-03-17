@@ -1,8 +1,9 @@
-import { vNode, vTextNode, vCompoentNode } from '../modal/VNode'
+import { vNode, vTextNode, vComponentNode } from '../modal/VNode'
 import { Component } from '../modal/Component'
 import $root from '../modal/Root'
 
 // 渲染domTree
+// oldDom用于在无法复用dom，或者复用的dom不是原dom时，进行替换防止位置变化，如果不传入则向后追加。
 export function renderDomTree(node, parentNode, oldDom) {
   // 如果传入的是字符串则改为文字类型元素
   if (node.constructor === String) node = new vTextNode(node);
@@ -21,7 +22,7 @@ export function renderDomTree(node, parentNode, oldDom) {
   }
   // 绑定到父元素
   if (oldDom) {
-    parentDom.replaceChild(dom, oldDom)
+    if (dom !== oldDom) parentDom.replaceChild(dom, oldDom);
   } else {
     parentDom.appendChild(dom);
   }
@@ -37,7 +38,7 @@ export function render(node, parentDom) {
 // 创建元素
 export function h(type, props, ...children) {
   if (type.prototype instanceof Component) {
-    return new vCompoentNode(type, props, children);
+    return new vComponentNode(type, props, children);
   } else {
     return new vNode(type, props, children);
   }
