@@ -37,6 +37,16 @@ export class vNode {
     // 监听事件
     for (let event in this.$events) this.$dom.addEventListener(event, this.$events[event]);
   }
+  static updateDom(newNode, preNode) {
+    let dom = preNode.$dom;
+    for (let key in preNode.$props) dom[key] = null;
+    for (let event in preNode.$events) dom.removeEventListener(event, preNode.$events[event]);
+    // 设置属性
+    for (let key in newNode.$props) dom[key] = newNode[key];
+    // 监听事件
+    for (let event in newNode$events) dom.addEventListener(event, newNode.$events[event]);
+    newNode.$dom = dom;
+  }
 }
 
 // 文字元素
@@ -58,10 +68,13 @@ export class vCompoentNode extends vNode {
     this.$slots = slots;
     this.$element = new type(this.$props, this.$events, slots);
     this.$element.$vNode = this;
-    console.log(this.$element)
   }
   createDom() {
     let child = this.$element.render();
+    // let preChild = this.$element.$children[0];
+    // if (preChild && preChild.$dom && preChild.type === child.type) {
+    //   vNode.updateDom(child, preChild);
+    // }
     this.$children = [child];
     this.$dom = child.getDom();
   }

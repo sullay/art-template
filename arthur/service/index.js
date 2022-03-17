@@ -3,20 +3,21 @@ import { Component } from '../modal/Component'
 import $root from '../modal/Root'
 
 // 渲染domTree
-export function renderDomTree(element, parentNode, oldDom) {
+export function renderDomTree(node, parentNode, oldDom) {
   // 如果传入的是字符串则改为文字类型元素
-  if (element.constructor === String) element = new vTextNode(element);
-  if (!vNode.isVNode(element)) throw new Error("渲染元素类型有误");
+  if (node.constructor === String) node = new vTextNode(node);
+  if (!vNode.isVNode(node)) throw new Error("渲染元素类型有误");
 
   // 设置父节点
-  element.$parentNode = parentNode;
+  node.$parentNode = parentNode;
   let parentDom = parentNode.getDom();
-  let dom = element.getDom();
+  let dom = node.getDom();
   // 判断是否为自定义组件
-  if (element.$isComponent) {
-    for (let child of element.$children[0].$children) renderDomTree(child, element.$children[0]);
+  if (node.$isComponent) {
+    node.$children[0].$parentNode = node;
+    for (let child of node.$children[0].$children) renderDomTree(child, node.$children[0]);
   } else {
-    for (let child of element.$children) renderDomTree(child, element);
+    for (let child of node.$children) renderDomTree(child, node);
   }
   // 绑定到父元素
   if (oldDom) {
@@ -27,10 +28,10 @@ export function renderDomTree(element, parentNode, oldDom) {
 }
 
 // 渲染方法
-export function render(element, parentDom) {
+export function render(node, parentDom) {
   $root.$dom = parentDom;
-  $root.$children = [element];
-  renderDomTree(element, $root);
+  $root.$children = [node];
+  renderDomTree(node, $root);
 }
 
 // 创建元素
