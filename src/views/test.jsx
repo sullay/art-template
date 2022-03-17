@@ -7,13 +7,17 @@ class Test extends atr.Component {
     this.addNum = this.addNum.bind(this);
   }
   addNum() {
-    this.setData(({ num }) => ({ num: num + 1 }))
+    this.setData({ num: this.data.num + 1 })
+  }
+  clickEvent = () => {
+    console.log('test', this.data)
+    this.events['test']('xxxxxxxxxxxxxxx')
   }
   render() {
     return (
       <div className="test">
         {this.props.hasTitle ? (<h1>{this.props.id}</h1>) : (<h2>没有title</h2>)}
-        <p style="color: red;">11111111111111111111</p>
+        <p style="color: red;" onclick={this.clickEvent}>11111111111111111111</p>
         <p>计数{this.data.num}</p>
         <button onclick={this.addNum}>+1</button>
       </div>
