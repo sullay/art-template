@@ -1,6 +1,5 @@
 import { TEXT_ELEMENT } from '../constants'
 import { isEvent, getEventName } from '../util'
-import { Component } from './Component'
 
 // 普通元素
 export class vNode {

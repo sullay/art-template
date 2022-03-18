@@ -10,7 +10,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      art: path.resolve(__dirname, 'arthur')
+      art: path.resolve(__dirname, 'art')
     }
   }
 })
