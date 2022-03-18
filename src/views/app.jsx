@@ -1,7 +1,7 @@
 import "../index.css";
 import Test from "./test"
 
-class App extends atr.Component {
+class App extends art.Component {
   constructor(node) {
     super(node);
     this.data = {

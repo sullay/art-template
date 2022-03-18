@@ -1,5 +1,4 @@
-import { renderDomTree } from '../../arthur/service'
-class Test extends atr.Component {
+class Test extends art.Component {
   constructor(node) {
     super(node);
     this.id = this.props.id;

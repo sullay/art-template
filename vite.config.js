@@ -4,13 +4,13 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   esbuild: {
-    jsxFactory: 'atr.h',
-    jsxFragment: 'atr.Fragment',
-    jsxInject: `import atr from 'atr'`
+    jsxFactory: 'art.h',
+    jsxFragment: 'art.Fragment',
+    jsxInject: `import art from 'art'`
   },
   resolve: {
     alias: {
-      atr: path.resolve(__dirname, 'arthur')
+      art: path.resolve(__dirname, 'arthur')
     }
   }
 })
