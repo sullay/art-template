@@ -1,7 +1,6 @@
 import { vNode } from './VNode'
 
-// const ROOT = Symbol('root');
-const ROOT = Symbol.for('root');
+const ROOT = Symbol('root');
 
 class Root extends vNode {
 }
