@@ -11,6 +11,9 @@ class Test extends art.Component {
         console.log(1111111111, this.data.num)
       })
     }
+    this.$vNode.$parentNode.$parentNode.$element.setData({ hasTitle: false },()=>{
+      console.log(22222222222)
+    })
   }
   clickEvent = () => {
     console.log('test', this.data)
