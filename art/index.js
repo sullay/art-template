@@ -1,4 +1,4 @@
-import { h, render } from './service';
+import { h, render } from './src/render';
 import { Component } from './modal/Component'
 
 export default {

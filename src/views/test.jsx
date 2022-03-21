@@ -6,7 +6,11 @@ class Test extends art.Component {
     this.addNum = this.addNum.bind(this);
   }
   addNum() {
-    this.setData({ num: this.data.num + 1 })
+    for (let i = 0; i < 100; i++) {
+      this.setData({ num: this.data.num + 1 }, () => {
+        console.log(1111111111, this.data.num)
+      })
+    }
   }
   clickEvent = () => {
     console.log('test', this.data)
