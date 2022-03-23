@@ -24,7 +24,8 @@ export class Component {
     for (const key in data) {
       this.data[key] = data[key];
     }
-    taskList.put(this.$vNode, {
+    taskList.put({
+      key: this.$vNode,
       val: () => {
         let oldDom = this.$vNode.$dom;
         // 自定义组件node的$dom指向子节点的$dom，此处赋值为null是为了触发createDom

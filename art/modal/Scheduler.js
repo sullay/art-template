@@ -24,7 +24,7 @@ export class Task {
 }
 // 任务节点包装一层标记前后任务
 class Node {
-  constructor(key, { val = () => { }, callbackList = [], priority = NORMAL_PRIORITY_TIMEOUT } = {}) {
+  constructor({ key, val = () => { }, callbackList = [], priority = NORMAL_PRIORITY_TIMEOUT } = {}) {
     this.task = new Task(key, val, callbackList, priority);
     // 跳表各层级后一个节点
     this.next = new Array(MAX_LEVEL).fill(null);
@@ -41,9 +41,9 @@ export class TaskList {
     // 跳表最大层级
     this.maxLevel = 0;
     // 跳表头
-    this.head = new Node(HEAD);
+    this.head = new Node({ key: HEAD });
     // 跳表尾
-    this.tail = new Node(TAIL);
+    this.tail = new Node({ key: TAIL });
     // 空跳表链接收尾
     for (let i = 0; i < MAX_LEVEL; i++) {
       this.head.next[i] = this.tail;
@@ -93,7 +93,7 @@ export class TaskList {
   }
 
   // 添加任务，如果已经存在相同key的任务，更新任务方法，回调函数合并到callbackList，并根据超时时间移动位置。
-  put(key, { val = () => { }, callbackList = [], priority = NORMAL_PRIORITY_TIMEOUT }) {
+  put({ key = Symbol('default'), val = () => { }, callbackList = [], priority = NORMAL_PRIORITY_TIMEOUT }) {
     if (this.has(key)) {
       // 已经存在key值相同的任务
       // 获取相同key值任务
@@ -136,7 +136,7 @@ export class TaskList {
       // 生成当前任务跳表层级
       let level = TaskList.getLevel();
       // 创建任务
-      let node = new Node(key, { val, callbackList, priority });
+      let node = new Node({ key, val, callbackList, priority });
       // 将新任务插入map
       this.map.set(key, node);
       // 将任务根据超时时间插入跳表，超时时间相同插入到最后
