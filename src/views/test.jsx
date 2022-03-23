@@ -7,13 +7,8 @@ class Test extends art.Component {
   }
   addNum() {
     for (let i = 0; i < 100; i++) {
-      this.setData({ num: this.data.num + 1 }, () => {
-        console.log(1111111111, this.data.num)
-      })
+      this.setData({ num: this.data.num + 1 })
     }
-    this.$vNode.$parentNode.$parentNode.$element.setData({ hasTitle: false },()=>{
-      console.log(22222222222)
-    })
   }
   clickEvent = () => {
     console.log('test', this.data)
