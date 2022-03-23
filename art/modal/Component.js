@@ -24,11 +24,13 @@ export class Component {
     for (const key in data) {
       this.data[key] = data[key];
     }
-    taskList.put(this.$vNode, () => {
-      let oldDom = this.$vNode.$dom;
-      // 自定义组件node的$dom指向子节点的$dom，此处赋值为null是为了触发createDom
-      this.$vNode.$dom = null;
-      renderDomTree(this.$vNode, this.$vNode.$parentNode, oldDom);
-    }, callbackList);
+    taskList.put(this.$vNode, {
+      val: () => {
+        let oldDom = this.$vNode.$dom;
+        // 自定义组件node的$dom指向子节点的$dom，此处赋值为null是为了触发createDom
+        this.$vNode.$dom = null;
+        renderDomTree(this.$vNode, this.$vNode.$parentNode, oldDom);
+      }, callbackList
+    });
   }
 }
