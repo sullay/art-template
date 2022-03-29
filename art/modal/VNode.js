@@ -1,4 +1,3 @@
-import { TEXT_ELEMENT } from '../constants'
 import { isEvent, getEventName } from '../util'
 
 // 普通元素
@@ -21,8 +20,8 @@ export class vNode {
     });
   }
   // 判断是否属于虚拟Dom元素
-  static isVNode(element) {
-    return element instanceof this;
+  static isVNode(node) {
+    return node instanceof this;
   }
   // 获取node的dom
   getDom() {
@@ -67,11 +66,11 @@ export class vNode {
         if (vComponentNode.isVNode(node)) {
           let preChildren = preNode.$children;
           // 自定义组件，复用旧的组件实例
-          node.$element = preNode.$element;
+          node.$instance = preNode.$instance;
           // 组件实例$vNode指向新的node
-          node.$element.$vNode = node;
+          node.$instance.$vNode = node;
           // 更新自定义组件虚拟dom树
-          let child = node.$element.render();
+          let child = node.$instance.render();
           node.$children = [child];
           vNode.diffDom(node.$children, preChildren);
           // 自定义组件$dom指向子组件的$dom
@@ -89,8 +88,9 @@ export class vNode {
 // 文字元素
 export class vTextNode extends vNode {
   constructor(text) {
-    super(TEXT_ELEMENT, { nodeValue: text })
+    super(vTextNode.type, { nodeValue: text })
   }
+  static type = Symbol('TEXT_ELEMENT');
   createDom() {
     this.$dom = document.createTextNode('');
     // 设置属性
@@ -106,11 +106,11 @@ export class vComponentNode extends vNode {
     // 插槽
     this.$slots = slots;
     // 创建组件实例
-    this.$element = new type(this);
+    this.$instance = new type(this);
   }
   createDom() {
     let preChildren = this.$children;
-    let child = this.$element.render();
+    let child = this.$instance.render();
     this.$children = [child];
     // 每次创建时通过diff复用之前的dom或者子组件
     vNode.diffDom(this.$children, preChildren);
