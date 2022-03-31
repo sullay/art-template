@@ -4,11 +4,19 @@ class Test extends art.Component {
     this.id = this.props.id;
     this.data = { num: 1 }
     this.addNum = this.addNum.bind(this);
+    this.start;
   }
   addNum() {
-    for (let i = 0; i < 100; i++) {
-      this.setData({ num: this.data.num + 1 })
+    if (this.data.num === 1) this.start = performance.now();
+    if (this.data.num >= 50000) {
+      console.log(performance.now() - this.start);
+      return;
     }
+    // for (let i = 0; i < 100; i++) {
+    this.setData({ num: this.data.num + 1 }, () => {
+      this.addNum();
+    })
+    // }
   }
   clickEvent = () => {
     console.log('test', this.data)

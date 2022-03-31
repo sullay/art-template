@@ -19,7 +19,7 @@ export class Task {
     // 任务的所有回调函数
     this.callbackList = callbackList;
     // 任务最后超时时间
-    this.timeout = Date.now() + priority;
+    this.timeout = performance.now() + priority;
   }
 }
 // 任务节点包装一层标记前后任务
@@ -99,7 +99,7 @@ export class TaskList {
       // 获取相同key值任务
       let node = this.get(key);
       // 计算新任务的超时时间
-      let timeout = Date.now() + priority;
+      let timeout = performance.now() + priority;
       // 旧任务重新赋值
       node.task.val = val;
       // 合并新旧任务回调函数

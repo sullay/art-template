@@ -1,6 +1,6 @@
 
 import { renderDomTree } from '../src/render'
-import { taskList } from '../src/scheduler'
+import { pushTask } from '../src/scheduler'
 
 // 自定义组件类
 export class Component {
@@ -24,7 +24,7 @@ export class Component {
     for (const key in data) {
       this.data[key] = data[key];
     }
-    taskList.put({
+    pushTask({
       key: this.$vNode,
       val: () => {
         let oldDom = this.$vNode.$dom;
