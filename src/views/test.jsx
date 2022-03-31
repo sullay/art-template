@@ -7,16 +7,13 @@ class Test extends art.Component {
     this.start;
   }
   addNum() {
-    if (this.data.num === 1) this.start = performance.now();
     if (this.data.num >= 50000) {
-      console.log(performance.now() - this.start);
+      console.log('完成');
       return;
     }
-    // for (let i = 0; i < 100; i++) {
-    this.setData({ num: this.data.num + 1 }, () => {
+    this.setDataNow({ num: this.data.num + 1 }, () => {
       this.addNum();
     })
-    // }
   }
   clickEvent = () => {
     console.log('test', this.data)

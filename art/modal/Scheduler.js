@@ -2,13 +2,14 @@ const MAX_LEVEL = 16;
 const HEAD = Symbol('HEAD');
 const TAIL = Symbol('TAIL');
 
-// Times out immediately
-export const IMMEDIATE_PRIORITY_TIMEOUT = -1;
-export const HIGH_BLOCKING_PRIORITY_TIMEOUT = 250;
-export const NORMAL_PRIORITY_TIMEOUT = 1000;
-export const LOW_PRIORITY_TIMEOUT = 5000;
-export const IDLE_PRIORITY_TIMEOUT = 1073741823;
 
+export const PRIORITY_TYPES = {
+  IMMEDIATE_PRIORITY_TIMEOUT: -1,
+  HIGH_BLOCKING_PRIORITY_TIMEOUT: 250,
+  NORMAL_PRIORITY_TIMEOUT: 1000,
+  LOW_PRIORITY_TIMEOUT: 5000,
+  IDLE_PRIORITY_TIMEOUT: 1073741823,
+}
 
 // 单个任务
 export class Task {
@@ -24,7 +25,7 @@ export class Task {
 }
 // 任务节点包装一层标记前后任务
 class Node {
-  constructor({ key, val = () => { }, callbackList = [], priority = NORMAL_PRIORITY_TIMEOUT } = {}) {
+  constructor({ key, val = () => { }, callbackList = [], priority = PRIORITY_TYPES.NORMAL_PRIORITY_TIMEOUT } = {}) {
     this.task = new Task(key, val, callbackList, priority);
     // 跳表各层级后一个节点
     this.next = new Array(MAX_LEVEL).fill(null);
@@ -93,7 +94,7 @@ export class TaskList {
   }
 
   // 添加任务，如果已经存在相同key的任务，更新任务方法，回调函数合并到callbackList，并根据超时时间移动位置。
-  put({ key = Symbol('default'), val = () => { }, callbackList = [], priority = NORMAL_PRIORITY_TIMEOUT }) {
+  put({ key = Symbol('default'), val = () => { }, callbackList = [], priority = PRIORITY_TYPES.NORMAL_PRIORITY_TIMEOUT }) {
     if (this.has(key)) {
       // 已经存在key值相同的任务
       // 获取相同key值任务
