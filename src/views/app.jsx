@@ -5,17 +5,28 @@ class App extends art.Component {
   constructor(node) {
     super(node);
     this.data = {
-      hasTitle: true
+      hasTitle: true,
+      num: 1
     }
+    this.start;
   }
-  test = (name) => {
-    console.log(this.data)
-    alert(name)
+  addNum = () => {
+    if(this.data.num ===1)  this.start = performance.now();
+    if (this.data.num >= 50000) {
+      console.log(performance.now() - this.start);
+      console.log('完成');
+      return;
+    }
+    this.setDataNow({ num: this.data.num + 1 }, () => {
+      this.addNum();
+    })
   }
   render() {
     return (
       <div className="app">
-        <Test id="test" hasTitle={this.data.hasTitle} onTest={this.test} />
+        <Test count={this.data.count} hasTitle={this.data.hasTitle}/>
+        <button onclick={this.addNum}>+1</button>
+        <br/>
         <button onclick={() => this.setData({ hasTitle: !this.data.hasTitle })}>确认</button>
       </div>
     )
