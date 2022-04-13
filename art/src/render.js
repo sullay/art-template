@@ -1,7 +1,6 @@
 import { vNode, vTextNode, vComponentNode } from '../modal/VNode'
 import { Component } from '../modal/Component'
 import $root from '../modal/Root'
-
 // 渲染domTree
 // oldDom用于在无法复用dom，或者复用的dom不是原dom时，进行替换防止位置变化，如果不传入则向后追加。
 export function renderDomTree(node, parentNode, oldDom) {
@@ -34,6 +33,7 @@ export function render(node, parentDom) {
 
 // 创建元素
 export function h(type, props, ...children) {
+  children = children.flat();
   if (type.prototype instanceof Component) {
     return new vComponentNode(type, props, children);
   } else {
