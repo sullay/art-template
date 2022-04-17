@@ -7,8 +7,6 @@
     "preview": "vite preview",
     "test": "esbuild src/main.jsx --bundle --jsx-factory=art.h --jsx-fragment=art.Fragment --outfile=dist/test/out.js"
   },
-  "dependencies": {
-  },
   "devDependencies": {
     "vite": "^2.7.2"
   }
