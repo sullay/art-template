@@ -7,7 +7,9 @@ let isWorking = false;
 function workLoop(timestamp) {
   while (taskList.getFirstTimeOut() && (performance.now() - timestamp < 5 || taskList.getFirstTimeOut() <= performance.now())) {
     let task = taskList.shift();
+    // let x= performance.now();
     task.val();
+    // console.log(performance.now() -x);
     for (const callback of task.callbackList) {
       callback();
     }
@@ -25,4 +27,8 @@ export function pushTask(task) {
     isWorking = true;
     requestAnimationFrame(workLoop)
   };
+}
+
+function _requestAnimationFrame(workLoop){
+  Promise.resolve().then(workLoop(performance.now()))
 }

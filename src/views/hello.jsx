@@ -20,7 +20,9 @@ class App extends art.Component {
       this.addNum();
     })
   }
-
+  shouldComponentUpdate(nextProps){
+    return this.props.hasTitle!== nextProps.hasTitle
+  }
   render() {
     return (
       <div>

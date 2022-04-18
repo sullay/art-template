@@ -41,7 +41,7 @@ class Row extends art.Component {
     return (<tr className={selected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
       <td className="col-md-4"><a onClick={this.onSelect}>{item.label}</a></td>
-      <td className="col-md-1"><a onClick={this.onRemove}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+      <td className="col-md-1"><a onClick={this.onRemove}><span className="glyphicon glyphicon-remove" ariaHidden="true"></span></a></td>
       <td className="col-md-6"></td>
     </tr>);
   }
@@ -144,7 +144,7 @@ class Main extends art.Component {
           <Row key={i} item={item} selected={this.data.selected === item.id} select={this.select} remove={this.remove}></Row>
         ))}
       </tbody></table>
-      <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+      <span className="preloadicon glyphicon glyphicon-remove" ariaHidden="true"></span>
     </div>);
   }
 }

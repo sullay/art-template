@@ -1,5 +1,5 @@
 
-import { renderDomTree } from '../src/render'
+// import { renderDomTree } from '../src/render'
 import { pushTask } from '../src/scheduler'
 import { PRIORITY_TYPES } from './Scheduler'
 
@@ -27,8 +27,9 @@ function setDataFuc (data, callbackList, priority) {
       for (const key in data) {
         this.data[key] = data[key];
       }
-      this.$vNode.$dom = null;
-      renderDomTree(this.$vNode, this.$vNode.$parentNode);
+      this.$vNode.updateComponent();
+      // this.$vNode.$dom = null;
+      // renderDomTree(this.$vNode, this.$vNode.$parentNode);
     }, 
     callbackList, priority
   });
