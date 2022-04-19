@@ -65,116 +65,10 @@ export class vNode {
       }
     }
     for (let key in preNode.$events) {
-      if(!newNode.$events[key]) dom.removeEventListener(key, preNode.$events[key]);
+      if (!newNode.$events[key]) dom.removeEventListener(key, preNode.$events[key]);
     }
     newNode.$dom = dom;
   }
-
-  // 新旧节点对比，尽可能复用已有dom或者自定义组件
-  // static diffDom2(newNodes = [], preNodes = []) {
-  //   if (!newNodes.length) {
-  //     preNodes.forEach(node => node.$dom && node.$dom.remove());
-  //     return;
-  //   }
-  //   // 所有旧node
-  //   let preMap = new Map();
-  //   for (const node of preNodes) {
-  //     if (!preMap.has(node.$type)) preMap.set(node.$type, []);
-  //     if (node.$dom) preMap.get(node.$type).push(node);
-  //   }
-  //   // 遍历新node，查找是否存在可以复用的node
-  //   let beforeNode = 'head';
-  //   for (const node of newNodes) {
-  //     if (preMap.has(node.$type) && preMap.get(node.$type).length) {
-  //       let preNode = preMap.get(node.$type).shift();
-  //       if (vComponentNode.isVNode(node)) {
-  //         let preChildren = preNode.$children;
-  //         // 自定义组件，复用旧的组件实例
-  //         node.$instance = preNode.$instance;
-  //         // 组件实例$vNode指向新的node
-  //         node.$instance.$vNode = node;
-  //         if (!node.$instance.shouldComponentUpdate || !node.$instance.shouldComponentUpdate(node.$props)) {
-  //           node.$children = preNode.$children;
-  //           node.$dom = preNode.$dom;
-  //           node.$children[0].$parentNode = node;
-  //         } else {
-  //           node.$instance.props = node.$props;
-  //           // 更新自定义组件虚拟dom树
-  //           let child = node.$instance.render();
-  //           node.$children = [child];
-  //           vNode.diffDom(node.$children, preChildren);
-  //           // 自定义组件$dom指向子组件的$dom
-  //           node.$dom = child.$dom;
-  //         }
-  //       } else {
-  //         vNode.updateDom(node, preNode);
-  //         vNode.diffDom(node.$children, preNode.$children);
-  //       }
-  //     }
-  //     node.$beforeNode = beforeNode;
-  //     beforeNode = node;
-  //   }
-
-  //   preMap.forEach(list => {
-  //     if (!list.length) return;
-  //     list.forEach(node => node.$dom && node.$dom.remove())
-  //   })
-  // }
-  // static diffDom(_newNodes = [], _preNodes = []) {
-  //   let stack = [
-  //     [_newNodes, _preNodes]
-  //   ];
-  //   while (stack.length) {
-  //     let [newNodes, preNodes] = stack.pop();
-  //     if (!newNodes.length) {
-  //       preNodes.forEach(node => node.$dom && node.$dom.remove());
-  //       continue;
-  //     }
-  //     // 所有旧node
-  //     let preMap = new Map();
-  //     for (const node of preNodes) {
-  //       if (!preMap.has(node.$type)) preMap.set(node.$type, []);
-  //       if (node.$dom) preMap.get(node.$type).push(node);
-  //     }
-  //     // 遍历新node，查找是否存在可以复用的node
-  //     let beforeNode = 'head';
-  //     for (const node of newNodes) {
-  //       if (preMap.has(node.$type) && preMap.get(node.$type).length) {
-  //         let preNode = preMap.get(node.$type).shift();
-  //         if (vComponentNode.isVNode(node)) {
-  //           let preChildren = preNode.$children;
-  //           // 自定义组件，复用旧的组件实例
-  //           node.$instance = preNode.$instance;
-  //           // 组件实例$vNode指向新的node
-  //           node.$instance.$vNode = node;
-  //           if (!node.$instance.shouldComponentUpdate || !node.$instance.shouldComponentUpdate(node.$props)) {
-  //             node.$children = preNode.$children;
-  //             node.$dom = preNode.$dom;
-  //             node.$children[0].$parentNode = node;
-  //           } else {
-  //             node.$instance.props = node.$props;
-  //             // 更新自定义组件虚拟dom树
-  //             let child = node.$instance.render();
-  //             node.$children = [child];
-  //             // vNode.diffDom(node.$children, preChildren);
-  //             stack.push([node.$children, preChildren]);
-  //             // 自定义组件$dom指向子组件的$dom
-  //             node.$dom = child.$dom;
-  //           }
-  //         } else {
-  //           vNode.updateDom(node, preNode);
-  //           stack.push([node.$children, preNode.$children]);
-  //         }
-  //       }
-  //       node.$beforeNode = beforeNode;
-  //       beforeNode = node;
-  //     }
-  //     preMap.forEach(list => {
-  //       if (!list.length) return;
-  //       list.forEach(node => node.$dom && node.$dom.remove())
-  //     })
-  //   }
-  // }
 }
 
 // 文字元素
@@ -209,19 +103,11 @@ export class vComponentNode extends vNode {
     this.$dom = child.getDom();
   }
   updateComponent() {
-    // let x = performance.now();
-    // let time;
     let preChildren = this.$children;
     let child = this.$instance.render();
     this.$children = [child];
-    // time = performance.now() - x;
-    // if (time > 0.5) console.log('updateComponent_0', this, time)
-
     vComponentNode.diffDom(this.$children, preChildren, this);
     this.$dom = child.getDom();
-
-    // time = performance.now() - x;
-    // if (time > 0.5) console.log('updateComponent', this, time)
   }
 
   static diffDom(_newNodes = [], _preNodes = [], _parentNode) {
@@ -240,12 +126,13 @@ export class vComponentNode extends vNode {
         if (!preMap.has(node.$type)) preMap.set(node.$type, []);
         if (node.$dom) preMap.get(node.$type).push(node);
       }
+      //  指向同层级上一个节点
       let beforeNode = null;
       for (const node of newNodes) {
         if (preMap.has(node.$type) && preMap.get(node.$type).length) {
           node.$parentNode = parentNode;
           let preNode = preMap.get(node.$type).shift();
-          if (vComponentNode.isVNode(node)) {
+          if (node.$isComponent) {
             // 自定义组件，复用旧的组件实例
             node.$instance = preNode.$instance;
             // 组件实例$vNode指向新的node
@@ -259,17 +146,14 @@ export class vComponentNode extends vNode {
               // 更新自定义组件虚拟dom树
               let child = node.$instance.render();
               node.$children = [child];
-              // vComponentNode.diffDom(node.$children, preNode.$children, node);
               stack.push([node.$children, preNode.$children, node, beforeNode]);
-              // 自定义组件$dom指向子组件的$dom
-              // node.$dom = child.getDom();
             }
           } else {
             vNode.updateDom(node, preNode);
-            // vComponentNode.diffDom(node.$children, preNode.$children, node);
             stack.push([node.$children, preNode.$children, node]);
           }
         } else if (parentNode.$isComponent) {
+          // 没有复用的自定义组件节点更新
           let dom = parentNode.getDom();
           if (parentNodeBefore) {
             parentNodeBefore.$dom.after(dom);
@@ -280,13 +164,12 @@ export class vComponentNode extends vNode {
           }
           renderDomTree(parentNode, parentNode.$parentNode);
         } else {
+          // 没有复用的普通节点更新
           let dom = node.getDom();
-          if (node.$type === 'h1' || node.$type === 'h2')
-            if (beforeNode) {
-              beforeNode.$dom.after(dom);
-            } else if (parentNode.$dom.firstChild) {
-            if (node.$type === 'h1' || node.$type === 'h2')
-              parentNode.$dom.firstChild.before(dom);
+          if (beforeNode) {
+            beforeNode.$dom.after(dom);
+          } else if (parentNode.$dom.firstChild) {
+            parentNode.$dom.firstChild.before(dom);
           } else {
             parentNode.$dom.appendChild(dom);
           }
@@ -294,6 +177,7 @@ export class vComponentNode extends vNode {
         }
         beforeNode = node;
       }
+      // 自定义组件设置dom
       if (parentNode.$isComponent && !parentNode.$dom) parentNode.$dom = newNodes[0].getDom();
       preMap.forEach(list => {
         if (!list.length) return;
@@ -301,82 +185,4 @@ export class vComponentNode extends vNode {
       })
     }
   }
-  // 新旧节点对比，尽可能复用已有dom或者自定义组件
-  // static diffDom2(newNodes = [], preNodes = [], parentNode) {
-  //   let x = performance.now();
-  //   let time;
-  //   if (!newNodes.length) {
-  //     preNodes.forEach(node => node.$dom && node.$dom.remove());
-  //     return;
-  //   }
-  //   // 所有旧node
-  //   let preMap = new Map();
-  //   for (const node of preNodes) {
-  //     if (!preMap.has(node.$type)) preMap.set(node.$type, []);
-  //     if (node.$dom) preMap.get(node.$type).push(node);
-  //   }
-  //   time = performance.now() - x;
-  //   if (time > 0.5) console.log('diff_map', parentNode, time)
-  //   // 遍历新node，查找是否存在可以复用的node
-  //   let beforeNode = null;
-  //   for (const node of newNodes) {
-  //     if (preMap.has(node.$type) && preMap.get(node.$type).length) {
-  //       node.$parentNode = parentNode;
-  //       let preNode = preMap.get(node.$type).shift();
-  //       if (vComponentNode.isVNode(node)) {
-  //         let y = performance.now();
-  //         let time1;
-  //         // 自定义组件，复用旧的组件实例
-  //         node.$instance = preNode.$instance;
-  //         // 组件实例$vNode指向新的node
-  //         node.$instance.$vNode = node;
-  //         if (!node.$instance.shouldComponentUpdate || !node.$instance.shouldComponentUpdate(node.$props)) {
-  //           node.$children = preNode.$children;
-  //           node.$dom = preNode.$dom;
-  //           node.$children[0].$parentNode = node;
-  //         } else {
-  //           node.$instance.props = node.$props;
-  //           // 更新自定义组件虚拟dom树
-  //           let child = node.$instance.render();
-  //           node.$children = [child];
-  //           vComponentNode.diffDom(node.$children, preNode.$children, node);
-  //           // 自定义组件$dom指向子组件的$dom
-  //           node.$dom = child.getDom();
-  //         }
-  //         time1 = performance.now() - y;
-  //         if (parentNode.$type === 'tbody' && time1 > 0.15) console.log(node.$props.key, node, time1)
-  //       } else {
-  //         vNode.updateDom(node, preNode);
-  //         vComponentNode.diffDom(node.$children, preNode.$children, node);
-  //       }
-  //     } else {
-  //       let dom = node.getDom();
-  //       if (beforeNode) {
-  //         beforeNode.$dom.after(dom);
-  //       } else if (parentNode.$dom.firstChild) {
-  //         parentNode.$dom.firstChild.before(dom);
-  //       } else {
-  //         parentNode.$dom.appendChild(dom);
-  //       }
-  //       renderDomTree(node, parentNode);
-  //     }
-  //     beforeNode = node;
-  //   }
-  //   time = performance.now() - x;
-  //   if (time > 0.5) console.log('diff_1', parentNode, time)
-  //   preMap.forEach(list => {
-  //     if (!list.length) return;
-  //     list.forEach(node => node.$dom && node.$dom.remove())
-  //   })
-  //   time = performance.now() - x;
-  //   if (time > 0.5) console.log('diff', parentNode, time)
-  // }
-  // createDom() {
-  //   let preChildren = this.$children;
-  //   let child = this.$instance.render();
-  //   this.$children = [child];
-  //   // 每次创建时通过diff复用之前的dom或者子组件
-  //   vNode.diffDom(this.$children, preChildren);
-  //   this.$dom = child.getDom();
-  // }
 }
