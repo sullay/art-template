@@ -26,7 +26,3 @@ export function pushTask(task) {
     requestAnimationFrame(workLoop)
   };
 }
-
-function _requestAnimationFrame(workLoop){
-  Promise.resolve().then(workLoop(performance.now()))
-}

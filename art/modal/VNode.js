@@ -120,6 +120,13 @@ export class vComponentNode extends vNode {
         preNodes.forEach(node => node.$dom && node.$dom.remove());
         continue;
       }
+      // while (newNodes.length < preNodes.length) {
+      //   let node = preNodes.shift();
+      //   node.$dom.remove();
+      // }
+      if (newNodes.length < preNodes.length) {
+        preNodes = preNodes.concat(preNodes.splice(0, preNodes.length - newNodes.length))
+      }
       // 所有旧node
       let preMap = new Map();
       for (const node of preNodes) {

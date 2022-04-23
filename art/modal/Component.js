@@ -1,9 +1,15 @@
-import { pushTask } from '../src/scheduler'
-import { PRIORITY_TYPES } from './Scheduler'
+import {
+  pushTask
+} from '../src/scheduler'
+import {
+  PRIORITY_TYPES
+} from './Scheduler'
 
 // 自定义组件类
 export class Component {
-  constructor({props = {}}) {
+  constructor({
+    props = {}
+  }) {
     this.data = {}
     this.props = props;
   }
@@ -15,9 +21,12 @@ export class Component {
   setDataNow(data, ...callbackList) {
     setDataFuc.call(this, data, callbackList, PRIORITY_TYPES.IMMEDIATE_PRIORITY_TIMEOUT)
   }
+  forceUpdate() {
+    setDataFuc.call(this)
+  }
 }
 
-function setDataFuc (data, callbackList, priority) {
+function setDataFuc(data = {}, callbackList, priority) {
   pushTask({
     key: this.$vNode,
     val: () => {
@@ -26,7 +35,8 @@ function setDataFuc (data, callbackList, priority) {
         this.data[key] = data[key];
       }
       this.$vNode.updateComponent();
-    }, 
-    callbackList, priority
+    },
+    callbackList,
+    priority
   });
 }

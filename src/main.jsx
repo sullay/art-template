@@ -64,7 +64,7 @@ class Jumbotron extends art.Component {
       <div className="jumbotron">
         <div className="row">
           <div className="col-md-6">
-            <h1>React non-keyed</h1>
+            <h1>Art</h1>
           </div>
           <div className="col-md-6">
             <div className="row">
@@ -106,8 +106,7 @@ class Main extends art.Component {
       const item = data[i];
       data[i] = { id: item.id, label: item.label + ' !!!' };
     }
-    this.setData({})
-    // this.forceUpdate();
+    this.forceUpdate();
   }
 
   select = (item) => {
@@ -117,8 +116,7 @@ class Main extends art.Component {
   remove = (item) => {
     const data = this.data.data;
     data.splice(data.indexOf(item), 1);
-    // this.forceUpdate();
-    this.setData({})
+    this.forceUpdate();
   }
 
   clear = () => {
@@ -132,8 +130,7 @@ class Main extends art.Component {
       data[1] = data[998];
       data[998] = temp;
     }
-    // this.forceUpdate();
-    this.setData({})
+    this.forceUpdate();
   }
 
   render() {
