@@ -6,7 +6,7 @@ export default defineConfig({
   esbuild: {
     jsxFactory: 'art.h',
     jsxFragment: 'art.Fragment',
-    jsxInject: `import art from 'art'`
+    jsxInject: `import art from 'js-art'`
   },
   resolve: {
     alias: {
