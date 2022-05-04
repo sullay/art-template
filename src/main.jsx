@@ -1,7 +1,5 @@
 import "./css/currentStyle.css"
-function random(max) {
-  return Math.round(Math.random() * 1000) % max;
-}
+const random = (max) => Math.round(Math.random() * 1000) % max;
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -12,137 +10,164 @@ const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "s
 
 let nextId = 1;
 
-function buildData(count) {
+const buildData = (count) => {
   const data = new Array(count);
+
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
       label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
     };
   }
-  return data;
-}
 
+  return data;
+};
+
+const initialdata = { data: [], selected: 0 };
 
 class Row extends art.Component {
   shouldComponentUpdate(nextProps) {
-    return nextProps.item !== this.props.item || nextProps.selected !== this.props.selected;
+    const { item, selected } = this.props;
+    return nextProps.item !== item || nextProps.selected !== selected;
   }
-  onSelect = () => {
-    this.props.select(this.props.item);
+
+  constructor(props) {
+    super(props);
+
+    this.onSelect = () => {
+      const { item, dispatch } = this.props;
+
+      dispatch({ type: 'SELECT', id: item.id });
+    };
+
+    this.onRemove = () => {
+      const { item, dispatch } = this.props;
+
+      dispatch({ type: 'REMOVE', id: item.id });
+    };
   }
-  
-  onRemove = () => {
-    this.props.remove(this.props.item);
-  }
-  
+
   render() {
-    let { selected, item } = this.props;
-    return (<tr className={selected ? "danger" : ""}>
-      <td className="col-md-1">{item.id}</td>
-      <td className="col-md-4"><a onClick={this.onSelect}>{item.label}</a></td>
-      <td className="col-md-1"><a onClick={this.onRemove}><span className="glyphicon glyphicon-remove" ariaHidden="true"></span></a></td>
-      <td className="col-md-6"></td>
-    </tr>);
-  }
-}
-class Button extends art.Component {
-  render() {
+    const { selected, item } = this.props;
+
     return (
-      <div className="col-sm-6 smallpad">
-        <button type="button" className="btn btn-primary btn-block" id={this.props.id} onClick={this.props.cb}>{this.props.title}</button>
-      </div>
+        <tr className={selected ? "danger" : ""}>
+          <td className="col-md-1">{item.id}</td>
+          <td className="col-md-4">
+            <a onClick={this.onSelect}>{item.label}</a>
+          </td>
+          <td className="col-md-1">
+            <a onClick={this.onRemove}>
+              <span className="glyphicon glyphicon-remove" aria-hidden="true" />
+            </a>
+          </td>
+          <td className="col-md-6" />
+        </tr>
     );
   }
 }
 
+class Button extends art.Component {
+  render() {
+    const { id, cb, title } = this.props;
+
+    return (
+        <div className="col-sm-6 smallpad">
+          <button type="button" className="btn btn-primary btn-block" id={id} onClick={cb}>{title}</button>
+        </div>
+    );
+  }
+}
 
 class Jumbotron extends art.Component {
   render() {
-    const { run, runLots, add, update, clear, swapRows } = this.props;
+    const { dispatch } = this.props;
+
     return (
-      <div className="jumbotron">
-        <div className="row">
-          <div className="col-md-6">
-            <h1>Art</h1>
-          </div>
-          <div className="col-md-6">
-            <div className="row">
-              <Button id="run" title="Create 1,000 rows" cb={run} />
-              <Button id="runlots" title="Create 10,000 rows" cb={runLots} />
-              <Button id="add" title="Append 1,000 rows" cb={add} />
-              <Button id="update" title="Update every 10th row" cb={update} />
-              <Button id="clear" title="Clear" cb={clear} />
-              <Button id="swaprows" title="Swap Rows" cb={swapRows} />
+        <div className="jumbotron">
+          <div className="row">
+            <div className="col-md-6">
+              <h1>Art keyed</h1>
+            </div>
+            <div className="col-md-6">
+              <div className="row">
+                <Button id="run" title="Create 1,000 rows" cb={() => dispatch({ type: 'RUN' })} />
+                <Button id="runlots" title="Create 10,000 rows" cb={() => dispatch({ type: 'RUN_LOTS' })} />
+                <Button id="add" title="Append 1,000 rows" cb={() => dispatch({ type: 'ADD' })} />
+                <Button id="update" title="Update every 10th row" cb={() => dispatch({ type: 'UPDATE' })} />
+                <Button id="clear" title="Clear" cb={() => dispatch({ type: 'CLEAR' })} />
+                <Button id="swaprows" title="Swap Rows" cb={() => dispatch({ type: 'SWAP_ROWS' })} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+    )
   }
 }
 
 class Main extends art.Component {
-  data = {
-    data: [],
-    selected: 0,
-  };
+  constructor(props) {
+    super(props);
 
-  run = () => {
-    this.setData({ data: buildData(1000), selected: 0 });
-  }
+    this.data = initialdata;
 
-  runLots = () => {
-    this.setData({ data: buildData(10000), selected: 0 });
-  }
+    this.dispatch = (action) => {
+      const { data } = this.data;
 
-  add = () => {
-    this.setData({ data: this.data.data.concat(buildData(1000)) });
-  }
+      switch (action.type) {
+        case 'RUN':
+          return this.setData({ data: buildData(1000), selected: 0 });
+        case 'RUN_LOTS':
+          return this.setData({ data: buildData(10000), selected: 0 });
+        case 'ADD':
+          return this.setData({ data: data.concat(buildData(1000))});
+        case 'UPDATE': {
+          const newData = data.slice(0);
 
-  update = () => {
-    const data = this.data.data;
-    for (let i = 0; i < data.length; i += 10) {
-      const item = data[i];
-      data[i] = { id: item.id, label: item.label + ' !!!' };
-    }
-    this.forceUpdate();
-  }
+          for (let i = 0; i < newData.length; i += 10) {
+            const r = newData[i];
 
-  select = (item) => {
-    this.setData({ selected: item.id });
-  }
+            newData[i] = { id: r.id, label: r.label + " !!!" };
+          }
 
-  remove = (item) => {
-    const data = this.data.data;
-    data.splice(data.indexOf(item), 1);
-    this.forceUpdate();
-  }
+          return this.setData({ data: newData });
+        }
+        case 'CLEAR':
+          return this.setData({ data: [], selected: 0 });
+        case 'SWAP_ROWS': {
+          if (data.length > 998) {
+            return this.setData({ data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]] });
+          }
 
-  clear = () => {
-    this.setData({ data: [], selected: 0 });
-  }
+          return;
+        }
+        case 'REMOVE': {
+          const idx = data.findIndex((d) => d.id === action.id);
 
-  swapRows = () => {
-    const data = this.data.data;
-    if (data.length > 998) {
-      let temp = data[1];
-      data[1] = data[998];
-      data[998] = temp;
-    }
-    this.forceUpdate();
+          return this.setData({ data: [...data.slice(0, idx), ...data.slice(idx + 1)] });
+        }
+        case 'SELECT':
+          return this.setData({ selected: action.id });
+      }
+    };
   }
 
   render() {
-    return (<div className="container">
-      <Jumbotron run={this.run} runLots={this.runLots} add={this.add} update={this.update} clear={this.clear} swapRows={this.swapRows} />
-      <table className="table table-hover table-striped test-data"><tbody>
-        {this.data.data.map((item, i) => (
-          <Row key={i} item={item} selected={this.data.selected === item.id} select={this.select} remove={this.remove}></Row>
-        ))}
-      </tbody></table>
-      <span className="preloadicon glyphicon glyphicon-remove" ariaHidden="true"></span>
-    </div>);
+    const { data, selected } = this.data;
+
+    return (
+        <div className="container">
+          <Jumbotron dispatch={this.dispatch} />
+          <table className="table table-hover table-striped test-data">
+            <tbody>
+              {data.map((item) => (
+                <Row key={item.id} item={item} selected={selected === item.id} dispatch={this.dispatch} />
+              ))}
+            </tbody>
+          </table>
+          <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
+        </div>
+    );
   }
 }
 
