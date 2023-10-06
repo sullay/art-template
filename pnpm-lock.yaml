@@ -9,8 +9,8 @@ dependencies:
     specifier: ^3.3.6
     version: 3.4.1
   js-art:
-    specifier: ^0.1.8
-    version: 0.1.8
+    specifier: ^0.2.2
+    version: 0.2.2
 
 devDependencies:
   vite:
@@ -261,8 +261,10 @@ packages:
       has: 1.0.4
     dev: true
 
-  /js-art@0.1.8:
-    resolution: {integrity: sha512-J/TE4jXlrWYrAA5KOrvNL7LCrdzbEcj8Otz13+UIc1tIfHMfF6x0a6eRWKCa+uyHhMnyiu+G7BHujP89ahMhow==}
+  /js-art@0.2.2:
+    resolution: {integrity: sha512-uMBsTrT/PPoyFIUtZakJg1L1SAhtHy9L3Xv42CZw60N0xdqz+ySrp2Wr6UggC4AWZsN0LEsMedn3vz2qXcx2kQ==}
+    dependencies:
+      web-scheduler: 1.0.1
     dev: false
 
   /nanoid@3.3.6:
@@ -338,3 +340,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
+
+  /web-scheduler@1.0.1:
+    resolution: {integrity: sha512-2ecnPAhJCCBGaQNS5SHP8rfjnhTW/oG95wKAnZ2bYZG6GgpsnzBczncND/NOBbbWZSHdhjPdB6OMdag0c8IL/A==}
+    dev: false

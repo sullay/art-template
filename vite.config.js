@@ -7,10 +7,5 @@ export default defineConfig({
     jsxFactory: 'art.h',
     jsxFragment: 'art.Fragment',
     jsxInject: `import art from 'js-art'`
-  },
-  resolve: {
-    alias: {
-      art: path.resolve(__dirname, 'art')
-    }
   }
 })
